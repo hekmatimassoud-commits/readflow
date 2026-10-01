@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReadFlow — Reading Speed &amp; Comprehension Test</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="#" data-nav="home" aria-label="ReadFlow"><span class="logo-mark" aria-hidden="true"></span>ReadFlow</a>
+      <nav aria-label="Main">
+        <button class="nav-btn active" data-nav="home" data-i18n="home" aria-current="page">Home</button>
+        <button class="nav-btn" data-nav="test" data-i18n="test">Test</button>
+        <button class="nav-btn" data-nav="quick" data-i18n="quick">Quick Reading</button>
+        <button class="nav-btn" data-nav="games" data-i18n="games">Reading Games</button>
+        <button class="nav-btn" data-nav="stats" data-i18n="stats">Statistics</button>
+        <button class="nav-btn" data-nav="about" data-i18n="about">About</button>
+      </nav>
+      <select id="lang-select" aria-label="Language"></select>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HOME ================= -->
+    <section id="view-home" class="view">
+      <div class="card">
+        <h1 data-i18n="heroTitle"></h1>
+        <p class="lead" data-i18n="heroSub"></p>
+      </div>
+      <div class="cards4">
+        <button class="home-card" data-nav="test"><strong data-i18n="cardTest"></strong><span data-i18n="cardTestD"></span></button>
+        <button class="home-card" data-nav="quick"><strong data-i18n="cardQuick"></strong><span data-i18n="cardQuickD"></span></button>
+        <button class="home-card" data-nav="games"><strong data-i18n="cardGames"></strong><span data-i18n="cardGamesD"></span></button>
+        <button class="home-card" data-nav="stats"><strong data-i18n="cardStats"></strong><span data-i18n="cardStatsD"></span></button>
+      </div>
+      <h2 data-i18n="today"></h2>
+      <div class="grid" id="today-grid"></div>
+    </section>
+
+    <!-- ================= TEST ================= -->
+    <section id="view-test" class="view" hidden>
+      <div class="card step" id="step-welcome">
+        <h1 data-i18n="cardTest"></h1>
+        <p class="lead" data-i18n="heroSub"></p>
+        <fieldset class="levels">
+          <legend data-i18n="chooseLevel"></legend>
+          <label class="level"><input type="radio" name="difficulty" value="easy" checked><span><strong data-i18n="easy"></strong><em data-i18n="easyD"></em></span></label>
+          <label class="level"><input type="radio" name="difficulty" value="medium"><span><strong data-i18n="medium"></strong><em data-i18n="mediumD"></em></span></label>
+          <label class="level"><input type="radio" name="difficulty" value="hard"><span><strong data-i18n="hard"></strong><em data-i18n="hardD"></em></span></label>
+        </fieldset>
+        <button class="btn primary big" id="btn-start-test" data-i18n="startTest"></button>
+      </div>
+
+      <div class="card step" id="step-reading" hidden>
+        <ol class="progress"><li class="done" data-i18n="stRead"></li><li data-i18n="stAnswer"></li><li data-i18n="stResults"></li></ol>
+        <div class="reading-top">
+          <span class="badge" id="read-level"></span>
+          <span class="meta" id="read-words"></span>
+          <output class="timer" id="timer" dir="ltr">00:00</output>
+        </div>
+        <h2 id="read-title"></h2>
+        <article class="passage blurred" id="passage"></article>
+        <p class="hint" id="read-hint"></p>
+        <div class="actions">
+          <button class="btn primary" id="btn-start-reading" data-i18n="startReading"></button>
+          <button class="btn accent" id="btn-finish-reading" data-i18n="finishReading" disabled></button>
+        </div>
+      </div>
+
+      <form class="card step" id="step-questions" hidden novalidate>
+        <ol class="progress"><li class="done" data-i18n="stRead"></li><li class="done" data-i18n="stAnswer"></li><li data-i18n="stResults"></li></ol>
+        <h2 data-i18n="qTitle"></h2>
+        <p class="lead" id="q-speed"></p>
+        <div id="questions"></div>
+        <p class="error" id="q-error" role="alert" hidden></p>
+        <button class="btn primary" type="submit" id="btn-submit" data-i18n="submit"></button>
+      </form>
+
+      <div class="card step" id="step-results" hidden>
+        <ol class="progress"><li class="done" data-i18n="stRead"></li><li class="done" data-i18n="stAnswer"></li><li class="done" data-i18n="stResults"></li></ol>
+        <h2 id="res-message"></h2>
+        <p class="note" id="res-note" role="status" hidden></p>
+        <div class="grid" id="res-grid"></div>
+        <p class="category" id="res-category"></p>
+        <p class="hint" data-i18n="catNote"></p>
+        <div class="actions">
+          <button class="btn primary" id="btn-again"></button>
+          <button class="btn ghost" data-nav="stats" data-i18n="viewStats"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUICK READING ================= -->
+    <section id="view-quick" class="view" hidden>
+      <h1 data-i18n="quickTitle"></h1>
+      <p class="lead" id="lessons-progress" role="status"></p>
+      <div class="bar" aria-hidden="true"><div id="lessons-bar"></div></div>
+      <div id="lessons"></div>
+    </section>
+
+    <!-- ================= GAMES ================= -->
+    <section id="view-games" class="view" hidden>
+      <h1 data-i18n="gamesTitle"></h1>
+      <p class="lead" data-i18n="gamesIntro"></p>
+      <div class="grid" id="games-summary"></div>
+      <div class="levels-grid" id="levels"></div>
+    </section>
+
+    <!-- ================= STATISTICS ================= -->
+    <section id="view-stats" class="view" hidden>
+      <h1 data-i18n="stats"></h1>
+      <div class="grid" id="stats-grid"></div>
+      <h2 data-i18n="achTitle"></h2>
+      <div class="ach-grid" id="ach-list"></div>
+      <div class="card">
+        <div class="history-head">
+          <h2 data-i18n="history"></h2>
+          <button class="btn ghost danger" id="btn-clear" data-i18n="clear"></button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th data-i18n="date"></th><th data-i18n="difficulty"></th><th data-i18n="wpm"></th><th data-i18n="compShort"></th><th data-i18n="overallShort"></th></tr></thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="history-empty" data-i18n="noTests"></p>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section id="view-about" class="view" hidden>
+      <div class="card">
+        <h1 data-i18n="aboutTitle"></h1>
+        <p data-i18n="about1"></p>
+        <p data-i18n="about2"></p>
+        <p data-i18n="about3"></p>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <form method="dialog">
+      <h2 id="confirm-title" data-i18n="confirmTitle"></h2>
+      <p data-i18n="confirmText"></p>
+      <div class="actions">
+        <button class="btn ghost" value="cancel" data-i18n="cancel"></button>
+        <button class="btn danger-solid" value="confirm" data-i18n="clear"></button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
